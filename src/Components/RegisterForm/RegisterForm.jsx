@@ -1,97 +1,102 @@
 import React from "react";
-import '../LoginForm/LoginForm'
+import "../LoginForm/LoginForm";
 import { FaUser, FaLock, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useFormik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const initialValues = {
-    userName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: ''
-}
+  userName: "",
+  email: "",
+  phoneNumber: "",
+  password: "",
+  confirmPassword: "",
+};
 
-const onSubmit = values => {
-    console.log(values)
-}
+const onSubmit = (values) => {
+  console.log(values);
+};
 
-const validate = values => {
-    let errors = {}
-    if (!values.userName) {
-        errors.userName = 'UserName is Required'
-    }
-    if (!values.email) {
-        errors.email = 'Email is Required'
-    } else if (!values.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-        errors.email = 'Enter a valid email'
-    }
-    if (!values.phoneNumber) {
-        errors.phoneNumber = 'Phone Number is required'
-    } else if (!values.phoneNumber.match(/^[6-9]\d{9}$/)) {
-        errors.phoneNumber = 'Enter a valid Phone Number'
-    }
-    if (!values.password) {
-        errors.password = 'Password is required'
-    } else if (values.password.length < 8) {
-        errors.password = 'Password must have 8 characters'
-    }
-    if (!values.confirmPassword) {
-        errors.confirmPassword = 'Confirm Password is required'
-    } else if (values.password !== values.confirmPassword) {
-        errors.confirmPassword = 'Passwords must match'
-    }
-    return errors
-}
-
+const phoneRegex = /^[6-9]\d{9}$/;
+const validationSchema = Yup.object({
+  userName: Yup.string().required("UserName is Required!"),
+  email: Yup.string()
+    .email("Enter a valid email!")
+    .required("Email is Required!"),
+  phoneNumber: Yup.string()
+    .trim()
+    .matches(phoneRegex, "Invalid Phone Number!")
+    .required("Phone Number is Required!"),
+  password: Yup.string()
+    .required("Password is Required!")
+    .min(8, "Password must have atleast 8 characters"),
+  confirmPassword: Yup.string()
+    .required("Confirm Password is Required")
+    .oneOf([Yup.ref("password"), null], "Passwords must match"),
+});
 
 const RegisterForm = () => {
+  return (
+    <div className="Container">
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        <Form>
+          <h1> Register </h1>
+          <div className="input-box">
+            <Field type="text" placeholder="UserName" name="userName" />
+            <FaUser className="icon" />
+            <div className="error">
+              <ErrorMessage name="userName" />
+            </div>
+          </div>
+          <div className="input-box">
+            <Field type="email" placeholder="Email" name="email" />
+            <MdEmail className="icon" />
+            <div className="error">
+              <ErrorMessage name="email" />
+            </div>
+          </div>
+          <div className="input-box">
+            <Field type="tel" placeholder="Phone Number" name="phoneNumber" />
+            <FaPhoneAlt className="icon" />
+            <div className="error">
+              <ErrorMessage name="phoneNumber" />
+            </div>
+          </div>
+          <div className="input-box">
+            <Field type="password" placeholder="Password" name="password" />
+            <FaLock className="icon" />
+            <div className="error">
+              <ErrorMessage name="password" />
+            </div>
+          </div>
+          <div className="input-box">
+            <Field
+              type="password"
+              placeholder="Confirm Password"
+              name="confirmPassword"
+            />
+            <FaLock className="icon" />
+            <div className="error">
+              <ErrorMessage name="confirmPassword" />
+            </div>
+          </div>
 
-    let formik = useFormik({
-        initialValues,
-        onSubmit,
-        validate
-    })
+          <button type="submit"> Register </button>
+          <div className="register-link">
+            <p>
+              {" "}
+              Already have an account? <Link to="/"> Login</Link>
+            </p>
+          </div>
+        </Form>
+      </Formik>
+    </div>
+  );
+};
 
-    return (
-        <div className='Container'> 
-        <form onSubmit={formik.handleSubmit}>
-            <h1> Register </h1>
-            <div className= "input-box">
-                <input type="text" placeholder="UserName" required name="userName" onChange={formik.handleChange} value={formik.values.userName} onBlur={formik.handleBlur}/>
-                <FaUser className= 'icon' />
-                {formik.touched.userName && formik.errors.userName ? <div className="error">{formik.errors.userName}</div> : null}
-            </div>
-            <div className= "input-box">
-                <input type="email" placeholder="Email" required name = 'email' onChange={formik.handleChange} value={formik.values.email} onBlur={formik.handleBlur}/>
-                <MdEmail className= 'icon' />
-                {formik.touched.email && formik.errors.email ? <div className="error">{formik.errors.email}</div> : null}
-            </div>
-            <div className= "input-box">
-                <input type="tel" placeholder="Phone Number" required name='phoneNumber' onChange={formik.handleChange} value={formik.values.phoneNumber} onBlur={formik.handleBlur}/>
-                <FaPhoneAlt className= 'icon' />
-                {formik.touched.phoneNumber && formik.errors.phoneNumber ? <div className="error">{formik.errors.phoneNumber}</div> : null}
-            </div>
-            <div className= "input-box">
-                <input type="password" placeholder="Password" required name='password' onChange={formik.handleChange} value={formik.values.password} onBlur={formik.handleBlur}/>
-                <FaLock className= 'icon' />
-                {formik.touched.password && formik.errors.password ? <div className="error">{formik.errors.password}</div> : null}
-            </div>
-            <div className= "input-box">
-                <input type="password" placeholder="Confirm Password" required name='confirmPassword' onChange={formik.handleChange} value={formik.values.confirmPassword} onBlur={formik.handleBlur}/>
-                <FaLock className= 'icon' />
-                {formik.touched.confirmPassword && formik.errors.confirmPassword ? <div className="error">{formik.errors.confirmPassword}</div> : null}
-            </div>
-           
-            <button type = "submit"> Register </button>
-            <div className="register-link">
-                <p> Already have an account? <Link to="/"> Login</Link></p>
-            </div>
-
-        </form>
-        </div>
-    )
-}
-
-export default RegisterForm
+export default RegisterForm;
