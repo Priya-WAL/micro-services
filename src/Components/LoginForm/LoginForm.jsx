@@ -5,14 +5,34 @@ import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 const initialValues = {
   email: "",
   password: "",
 };
 
+const login = async (data) => {
+  await axios({
+    method: 'POST',
+    url: 'http://localhost:3000/user/login',
+    data: data
+  })
+    .then(function (res) {
+       console.log(res.data.access_token)
+       localStorage.setItem('authToken', res.data.access_token)
+       alert('Login successful!');
+    })
+    .catch(function (res) {
+       console.log(res)
+  });
+}
+
+
+
 const onSubmit = (values) => {
-  console.log("Form data", values);
+  login(values);
+
 };
 
 const validate = (values) => {
@@ -67,8 +87,10 @@ const LoginForm = () => {
             <a href="#"> Forgot Password?</a>
           </div>
 
-          <button type="submit"> Login </button>
-
+          <div className="register-link">
+          <button type="submit">Login</button>
+          </div>
+          
           <div className="register-link">
             <p>
               {" "}

@@ -5,22 +5,41 @@ import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import axios from "axios"
 
 const initialValues = {
-  userName: "",
+  username: "",
   email: "",
   phoneNumber: "",
   password: "",
   confirmPassword: "",
 };
 
+const register = async (data) => {
+  const { confirmPassword, ...dataWithoutPassword } = data
+  dataWithoutPassword.phoneNumber = Number(dataWithoutPassword.phoneNumber)
+  await axios({
+    method: 'POST',
+    url: 'http://localhost:3000/user/register',
+    data: dataWithoutPassword
+  })
+    .then(function (res) {
+       console.log(res.data)
+       alert('Successfully signed up!');  
+    })
+    .catch(function (res) {
+       console.log(res)
+  });
+}
+
 const onSubmit = (values) => {
-  console.log(values);
+  register(values)
 };
 
 const phoneRegex = /^[6-9]\d{9}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
 const validationSchema = Yup.object({
-  userName: Yup.string().required("UserName is Required!"),
+  username: Yup.string().required("Username is Required!"),
   email: Yup.string()
     .email("Enter a valid email!")
     .required("Email is Required!"),
@@ -29,6 +48,7 @@ const validationSchema = Yup.object({
     .matches(phoneRegex, "Invalid Phone Number!")
     .required("Phone Number is Required!"),
   password: Yup.string()
+    .matches(passwordRegex, "Password must have atleast 8 characters, one special character and number")
     .required("Password is Required!")
     .min(8, "Password must have atleast 8 characters"),
   confirmPassword: Yup.string()
@@ -47,10 +67,10 @@ const RegisterForm = () => {
         <Form>
           <h1> Register </h1>
           <div className="input-box">
-            <Field type="text" placeholder="UserName" name="userName" />
+            <Field type="text" placeholder="UserName" name="username" />
             <FaUser className="icon" />
             <div className="error">
-              <ErrorMessage name="userName" />
+              <ErrorMessage name="username" />
             </div>
           </div>
           <div className="input-box">

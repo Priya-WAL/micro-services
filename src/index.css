@@ -18,6 +18,8 @@ body {
   align-items: center;
   min-height: 100vh;
   background: Url('./Components/Assets/backgroundimage.png');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 code {
