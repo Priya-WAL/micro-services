@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LoginForm from './Components/LoginForm/LoginForm';
 import RegisterForm from './Components/RegisterForm/RegisterForm'
+import Dashboard from './Components/Dashboard/dashboard';
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
           <Route path='/' element={<LoginForm />}></Route>
           <Route path='register' element={<RegisterForm />} />
+          <Route path='dashboard' element={<Dashboard />}/>
       </Routes>
     </BrowserRouter>
   );
