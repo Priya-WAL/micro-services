@@ -1,38 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./LoginForm.css";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import socket from "../../socket";
 
 const initialValues = {
   email: "",
   password: "",
-};
-
-const login = async (data) => {
-  await axios({
-    method: 'POST',
-    url: 'http://localhost:3000/user/login',
-    data: data
-  })
-    .then(function (res) {
-       console.log(res.data.access_token)
-       localStorage.setItem('authToken', res.data.access_token)
-       alert('Login successful!');
-    })
-    .catch(function (res) {
-       console.log(res)
-  });
-}
-
-
-
-const onSubmit = (values) => {
-  login(values);
-
 };
 
 const validate = (values) => {
@@ -48,57 +28,118 @@ const validate = (values) => {
   return errors;
 };
 
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Enter a valid email!")
-    .required("Email is Required!"),
-  password: Yup.string().required("Password is Required!"),
-});
-
 const LoginForm = () => {
-  return (
-    <div className="Container">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        <Form>
-          <h1> Login </h1>
-          <div className="input-box">
-            <Field type="email" placeholder="Email" name="email" />
-            <MdEmail className="icon" />
-            <div className="error">
-              <ErrorMessage name="email" />
-            </div>
-          </div>
-          <div className="input-box">
-            <Field type="password" placeholder="Password" name="password" />
-            <FaLock className="icon" />
-            <div className="error">
-              <ErrorMessage name="password" />
-            </div>
-          </div>
-          <div className="remember-forgot">
-            <label>
-              {" "}
-              <input type="checkbox" /> Remember Me{" "}
-            </label>
-            <a href="#"> Forgot Password?</a>
-          </div>
+  const [socketId, setSocketId] = useState(null);
+  const navigate = useNavigate();
 
-          <div className="register-link">
-          <button type="submit">Login</button>
-          </div>
-          
-          <div className="register-link">
-            <p>
-              {" "}
-              Don't have an account? <Link to="/register"> Register</Link>
-            </p>
-          </div>
-        </Form>
-      </Formik>
+  useEffect(() => {
+    console.log('Socket.....')
+    socket.connect();
+
+    // Listen for the connect event to get the socket.id
+    socket.on("connect", () => {
+      console.log(socket);
+      setSocketId(socket.id); // Save the socket.id when connection is successful
+      console.log("Connected with socket ID:", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      setSocketId(null); // Reset the socketId on disconnect
+      console.log("Socket disconnected");
+    });
+
+    // Clean up when the component unmounts
+    return () => {
+      socket.off("login"); // Clean up the 'connect' listener
+      socket.off("disconnect"); // Clean up the 'disconnect' listener
+      socket.disconnect(); // Disconnect the socket
+    };
+  }, []);
+
+  const login = async (data, navigate) => {
+
+    try {
+      if (!socketId) {
+        toast.error("Socket not connected yet, please try again");
+        return;
+      }
+
+      // Add the socketId to the login data
+      const loginData = { ...data, socketId };
+
+      const res = await axios.post("http://localhost:3000/user/login", loginData);
+      localStorage.setItem("authToken", res.data.access_token);
+      toast.success("Login successful!");
+
+      // Redirect to dashboard after successful login
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (error) {
+      toast.error("Failed to login!");
+    }
+  };
+
+  const onSubmit = (values, onSubmitProps) => {
+    login(values);
+    onSubmitProps.resetForm();
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Enter a valid email!")
+      .required("Email is Required!"),
+    password: Yup.string().required("Password is Required!"),
+  });
+
+  return (
+    <div className="Container-login">
+      <div className="Container">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values, onSubmitProps) =>
+            onSubmit(values, onSubmitProps)
+          }
+        >
+          <Form>
+            <h1> Login </h1>
+            <div className="input-box">
+              <Field type="email" placeholder="Email" name="email" />
+              <MdEmail className="icon" />
+              <div className="error">
+                <ErrorMessage name="email" />
+              </div>
+            </div>
+            <div className="input-box">
+              <Field type="password" placeholder="Password" name="password" />
+              <FaLock className="icon" />
+              <div className="error">
+                <ErrorMessage name="password" />
+              </div>
+            </div>
+            <div className="remember-forgot">
+              <label>
+                {" "}
+                <input type="checkbox" /> Remember Me{" "}
+              </label>
+              <a href="#"> Forgot Password?</a>
+            </div>
+
+            <div className="register-link">
+              <button type="submit">Login</button>
+            </div>
+
+            <div className="register-link">
+              <p>
+                {" "}
+                Don't have an account? <Link to="/register"> Register</Link>
+              </p>
+            </div>
+          </Form>
+        </Formik>
+        <ToastContainer />
+      </div>
     </div>
   );
 };
