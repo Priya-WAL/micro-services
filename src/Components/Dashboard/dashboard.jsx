@@ -97,10 +97,13 @@ const Dashboard = () => {
     fetchNotifications();
   };
 
+  let userDetails = localStorage.getItem('user')
+  let { userName, email } = JSON.parse(userDetails)
+
   return (
     <div className="dashboard-home">
       <nav className="navbar">
-        <h1 className="navbar-logo">Microservices App</h1>
+        <h1 className="navbar-logo">Notification Service</h1>
         <div className="navbar-icons">
           <div className="notification-wrapper" onClick={toggleModal}>
             <IoMdNotificationsOutline className="notification-icon" />
@@ -113,7 +116,7 @@ const Dashboard = () => {
       </nav>
 
       <div className="dashboard-content">
-        <h1 className="dashboard-heading">Welcome to the Dashboard</h1>
+        <h1 className="dashboard-heading">Hey {userName}, Welcome to the Notification Service App</h1>
       </div>
 
       {/* Modal for Notifications */}
@@ -126,6 +129,8 @@ const Dashboard = () => {
                 &times;
               </button>
             </div>
+
+            {/* Scrollable list of messages */}
             <div className="message-cards">
               {messages.length > 0 ? (
                 messages

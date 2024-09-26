@@ -34,16 +34,20 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (socket.connected) {
-      console.log("Socket connected?", socket.id);
+      console.log("Socket connected?", socket.id)
       setSocketId(socket.id);
-      console.log("SocketId", socketId);
+    //   console.log('SocketId', socketId)
     }
     // Listen for the connect event to get the socket.id
     socket.on("connect", () => {
-      console.log(socket);
       setSocketId(socket.id); // Save the socket.id when connection is successful
       console.log("Connected with socket ID:", socket.id);
     });
+    
+    // Clean up when the component unmounts
+    return () => {
+      socket.off("connect"); // Clean up the 'disconnect' listener
+    };
   }, []);
 
   const login = async (data) => {
@@ -59,10 +63,22 @@ const LoginForm = () => {
 
       const res = await axios.post(
         "http://localhost:3000/user/login",
-        loginData
+        loginData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
-      localStorage.setItem("authToken", res.data.access_token);
-      console.log("authToken", res.data.access_token);
+      const token = res.headers['authorization'];
+      console.log('Authtoken', token)
+      let userDetails = {
+        userName: res.data.data.username,
+        email: res.data.data.email
+      }
+
+      console.log('token', userDetails)
+      localStorage.setItem("user", JSON.stringify(userDetails));
+      localStorage.setItem("authToken", token)
       toast.success("Login successful!");
 
       // Redirect to dashboard after successful login
