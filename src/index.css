@@ -14,9 +14,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  background: Url('./Components/Assets/backgroundimage.png');
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: #957DAD;
+  opacity: 0.9;
 }
 
 code {

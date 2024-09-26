@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 10%;
+    
   }
   
   .Container-register {
@@ -20,12 +21,13 @@
     color: black;
     border-radius: 10px;
     padding: 30px 40px;
-
+    box-shadow: 0 0 10px rgba(20, 19, 19, 0.8);
 }
 
 .Container h1{
     font-size: 36px;
     text-align: center;
+    color: #8961b1;
 }
 
 .Container .input-box {
@@ -56,7 +58,8 @@
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px
+    font-size: 16px;
+    color: #957DAD
 }
 
 .Container .remember-forgot{
@@ -79,7 +82,7 @@
 }
 
 .remember-forgot a {
-    color: black;
+    color: #5067AA;
     text-decoration: none;
 }
 
@@ -90,7 +93,7 @@
 .Container button{
     width: 100%;
     height: 45px;
-    background: black;
+    background: #957DAD;
     border:  none;
     outline: none;
     border-radius: 40px;
@@ -99,6 +102,10 @@
     font-size: 16px;
     color: white;
     font-weight: 700;
+}
+
+.Container button:hover {
+    background: #8961b1;
 }
 
 .Container .register-link{

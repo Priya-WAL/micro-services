@@ -11,8 +11,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: white; /* Navbar background color */
-    color: black;
+    background-color: 8961b1; /* Navbar background color */
+    color: white;
+    box-shadow: 0 0 10px rgba(20, 19, 19, 0.3);
   }
   
   .navbar-logo {
@@ -28,14 +29,14 @@
   .notification-icon,
   .profile-icon {
     font-size: 28px;
-    color: black;
+    color: white;
     margin-left: 20px;
     cursor: pointer;
   }
   
   .notification-icon:hover,
   .profile-icon:hover {
-    color: gray;
+    color: black;
   }
   
   /* Dashboard Content Styles */
@@ -46,7 +47,10 @@
   .dashboard-heading {
     font-size: 36px;
     font-weight: bold;
-    color: #333;
+    color: white;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 20%;
   }
   
