@@ -33,22 +33,17 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (socket.connected) {
+      console.log("Socket connected?", socket.id);
+      setSocketId(socket.id);
+      console.log("SocketId", socketId);
+    }
     // Listen for the connect event to get the socket.id
     socket.on("connect", () => {
       console.log(socket);
       setSocketId(socket.id); // Save the socket.id when connection is successful
       console.log("Connected with socket ID:", socket.id);
     });
-    // socket.on("disconnect", () => {
-    //   setSocketId(null); // Reset the socketId on disconnect
-    //   console.log("Socket disconnected");
-    // });
-    // Clean up when the component unmounts
-    // return () => {
-    //   socket.off("login"); // Clean up the 'connect' listener
-    //   socket.off("disconnect"); // Clean up the 'disconnect' listener
-    //   socket.disconnect(); // Disconnect the socket
-    // };
   }, []);
 
   const login = async (data) => {

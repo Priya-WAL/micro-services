@@ -10,14 +10,13 @@ const Dashboard = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
-  const [isFetching, setIsFetching] = useState(false); // Prevent duplicate API calls
-  const mounted = useRef(false); // To ensure the API call happens only once on mount
+  const [isFetching, setIsFetching] = useState(false);
+  const mounted = useRef(false);
 
-  // Function to fetch notifications from the API
   const fetchNotifications = async (replaceMessages = false) => {
-    const token = localStorage.getItem("authToken"); // Retrieve the token from local storage
+    const token = localStorage.getItem("authToken");
 
-    if (isFetching) return; // Prevent duplicate calls
+    if (isFetching) return;
     setIsFetching(true);
 
     try {
@@ -25,7 +24,7 @@ const Dashboard = () => {
         "http://localhost:3000/user/notifications",
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -36,30 +35,12 @@ const Dashboard = () => {
         isRead: msg.isRead,
       }));
 
-      setMessages((prevMessages) => {
-        // Remove duplicates by id
-        const existingIds = prevMessages.map((msg) => msg.id);
-        const newMessages = fetchedMessages.filter(
-          (msg) => !existingIds.includes(msg.id)
-        );
+      setMessages(fetchedMessages);
 
-        // Sort: unread messages at the top, read messages at the bottom
-        const allMessages = replaceMessages
-          ? [...newMessages, ...prevMessages] // Replace messages initially
-          : [...newMessages, ...prevMessages]; // Append new messages on "View All"
-
-        const sortedMessages = allMessages
-          .filter((msg) => !msg.isRead) // Unread messages first
-          .concat(allMessages.filter((msg) => msg.isRead)); // Read messages at the bottom
-
-        return sortedMessages;
-      });
-
-      // Update unread count based on new unread messages
-      const unreadFromAPI = fetchedMessages.filter((msg) => !msg.isRead).length;
-      setUnreadCount((prevUnreadCount) =>
-        replaceMessages ? unreadFromAPI : prevUnreadCount + unreadFromAPI
-      );
+      const unreadMessagesCount = fetchedMessages.filter(
+        (msg) => !msg.isRead
+      ).length;
+      setUnreadCount(unreadMessagesCount);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     } finally {
@@ -68,78 +49,62 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // Ensure the API is called only once on component mount
     if (!mounted.current) {
-      fetchNotifications(true); // Fetch and replace messages initially
+      fetchNotifications(true);
       mounted.current = true;
     }
 
-    // Listen for 'service' events continuously
     socket.on("service", (message) => {
       console.log("Service message received:", message);
-      setMessages((prevMessages) => [
-        { text: message, isRead: false }, // Add the service message at the top
-        ...prevMessages,
-      ]);
+      const newMessage = { id: null, text: message, isRead: false };
 
-      // Only increment unread count if the modal is not open
-      if (!isModalOpen) {
-        setUnreadCount((prevCount) => prevCount + 1);
-      }
+      setMessages((prevMessages) => [newMessage, ...prevMessages]);
+
+      setUnreadCount((prevCount) => prevCount + 1);
     });
 
-    // Cleanup on unmount
     return () => {
-      socket.off("service"); // Cleanup the 'service' event listener
+      socket.off("service");
     };
-  }, [isModalOpen]);
+  }, []);
 
-  // Toggle modal visibility
   const toggleModal = () => {
-    setIsModalOpen((prevOpen) => {
-      if (!prevOpen) {
-        // Reset unread count only when opening the modal
-        setUnreadCount(0);
-      }
-      return !prevOpen;
-    });
+    setIsModalOpen((prevOpen) => !prevOpen);
   };
 
-  // Mark individual message as read when clicked
   const markMessageAsRead = (index, id) => {
-    setMessages((prevMessages) =>
-      prevMessages.map((msg, i) =>
-        i === index ? { ...msg, isRead: true } : msg
-      )
+    const updatedMessages = messages.map((msg, i) =>
+      i === index ? { ...msg, isRead: true } : msg
     );
+    setMessages(updatedMessages);
 
-    // Emit the message ID to the backend only if the message has an ID
+    const updatedUnreadCount = updatedMessages.filter(
+      (msg) => !msg.isRead
+    ).length;
+    setUnreadCount(updatedUnreadCount);
+
     if (id) {
-      console.log("iddd....", id);
+      console.log("Marking as read:", id);
       socket.emit("readnotification", { notificationId: id });
     }
   };
 
-  // Expand or collapse the card
   const toggleExpandCard = (index) => {
     setExpandedCard(expandedCard === index ? null : index);
   };
 
-  // Handle "View All" button click
   const handleViewAll = () => {
-    fetchNotifications(); // Fetch the messages from the server again, do not replace existing ones
+    fetchNotifications();
   };
 
   return (
     <div className="dashboard-home">
-      {/* NavBar Section */}
       <nav className="navbar">
         <h1 className="navbar-logo">Microservices App</h1>
         <div className="navbar-icons">
           <div className="notification-wrapper" onClick={toggleModal}>
             <IoMdNotificationsOutline className="notification-icon" />
-            {/* Only show the notification count if the modal is closed */}
-            {!isModalOpen && unreadCount > 0 && (
+            {unreadCount > 0 && (
               <span className="notification-count">{unreadCount}</span>
             )}
           </div>
@@ -147,7 +112,6 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      {/* Dashboard Content */}
       <div className="dashboard-content">
         <h1 className="dashboard-heading">Welcome to the Dashboard</h1>
       </div>
@@ -162,16 +126,10 @@ const Dashboard = () => {
                 &times;
               </button>
             </div>
-
-            <button className="see-all-btn" onClick={handleViewAll}>
-              View All
-            </button>
-
-            {/* Scrollable list of messages */}
             <div className="message-cards">
               {messages.length > 0 ? (
                 messages
-                  .sort((a, b) => a.isRead - b.isRead) // Sort unread messages at the top
+                  .sort((a, b) => a.isRead - b.isRead)
                   .map((msg, index) => (
                     <div
                       className={`message-card ${
@@ -191,6 +149,9 @@ const Dashboard = () => {
                 <p>No new notifications.</p>
               )}
             </div>
+            <button className="see-all-btn" onClick={handleViewAll}>
+              View All
+            </button>
           </div>
         </div>
       )}
