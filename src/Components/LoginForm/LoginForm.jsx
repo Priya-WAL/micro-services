@@ -33,31 +33,26 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Socket.....')
-    socket.connect();
-
     // Listen for the connect event to get the socket.id
     socket.on("connect", () => {
       console.log(socket);
       setSocketId(socket.id); // Save the socket.id when connection is successful
       console.log("Connected with socket ID:", socket.id);
     });
-
-    socket.on("disconnect", () => {
-      setSocketId(null); // Reset the socketId on disconnect
-      console.log("Socket disconnected");
-    });
-
+    // socket.on("disconnect", () => {
+    //   setSocketId(null); // Reset the socketId on disconnect
+    //   console.log("Socket disconnected");
+    // });
     // Clean up when the component unmounts
-    return () => {
-      socket.off("login"); // Clean up the 'connect' listener
-      socket.off("disconnect"); // Clean up the 'disconnect' listener
-      socket.disconnect(); // Disconnect the socket
-    };
+    // return () => {
+    //   socket.off("login"); // Clean up the 'connect' listener
+    //   socket.off("disconnect"); // Clean up the 'disconnect' listener
+    //   socket.disconnect(); // Disconnect the socket
+    // };
   }, []);
 
-  const login = async (data, navigate) => {
-
+  const login = async (data) => {
+    console.log("testing", socketId);
     try {
       if (!socketId) {
         toast.error("Socket not connected yet, please try again");
@@ -67,8 +62,12 @@ const LoginForm = () => {
       // Add the socketId to the login data
       const loginData = { ...data, socketId };
 
-      const res = await axios.post("http://localhost:3000/user/login", loginData);
+      const res = await axios.post(
+        "http://localhost:3000/user/login",
+        loginData
+      );
       localStorage.setItem("authToken", res.data.access_token);
+      console.log("authToken", res.data.access_token);
       toast.success("Login successful!");
 
       // Redirect to dashboard after successful login
@@ -98,9 +97,7 @@ const LoginForm = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(values, onSubmitProps) =>
-            onSubmit(values, onSubmitProps)
-          }
+          onSubmit={(values, onSubmitProps) => onSubmit(values, onSubmitProps)}
         >
           <Form>
             <h1> Login </h1>

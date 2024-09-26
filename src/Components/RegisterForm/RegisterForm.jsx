@@ -18,7 +18,7 @@ const initialValues = {
 
 const register = async (data, navigate) => {
   const { confirmPassword, ...dataWithoutPassword } = data;
-  dataWithoutPassword.phoneNumber = "+91" + dataWithoutPassword.phoneNumber   // Adding +91 as default country code
+  dataWithoutPassword.phoneNumber = "+91" + dataWithoutPassword.phoneNumber; // Adding +91 as default country code
   await axios({
     method: "POST",
     url: "http://localhost:3000/user/register",
