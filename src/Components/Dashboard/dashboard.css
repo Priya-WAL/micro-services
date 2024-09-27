@@ -41,7 +41,7 @@
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    background-color: #333;
+    background-color: #957DAD;
     color: white;
 }
 
@@ -89,6 +89,7 @@
 
 .dashboard-heading {
     font-size: 32px;
+    color: #957DAD;
 }
 
 
@@ -105,7 +106,8 @@
     /* Shift the modal to the right corner */
     width: 350px;
     /* Adjust the modal width */
-    background: rgba(0, 0, 0, 0.5);
+    /* background: rgba(0, 0, 0, 0.5); */
+    box-shadow: 0 0 10px rgba(20, 19, 19, 0.2);
 }
 
 .profileModal {
@@ -113,7 +115,8 @@
     top: 50px;
     right: 10px;
     width: 250px;
-    background: rgba(0, 0, 0, 0.5);
+    /* background: rgba(0, 0, 0, 0.5); */
+    box-shadow: 0 0 10px rgba(20, 19, 19, 0.2);
 }
 
 .modal-content {
