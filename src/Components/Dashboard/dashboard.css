@@ -1,0 +1,180 @@
+/* Dashboard Styles */
+
+.dashboard-home {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.notification-icon,
+.profile-icon {
+    font-size: 28px;
+    color: white;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.notification-icon:hover,
+.profile-icon:hover {
+    color: black;
+}
+
+
+/* Dashboard Content Styles */
+
+.dashboard-content {
+    padding: 20px;
+}
+
+.dashboard-heading {
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 20%;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.navbar-logo {
+    font-size: 24px;
+}
+
+.navbar-icons {
+    display: flex;
+    align-items: center;
+}
+
+.notification-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-icon {
+    font-size: 24px;
+    color: white;
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.profile-icon {
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+
+/* Dashboard Content */
+
+.dashboard-content {
+    padding: 20px;
+}
+
+.dashboard-heading {
+    font-size: 32px;
+}
+
+
+/* Modal Styles */
+
+
+/* Modal Styles */
+
+.modal {
+    position: fixed;
+    top: 10px;
+    /* Keep the modal towards the top */
+    right: 10px;
+    /* Shift the modal to the right corner */
+    width: 350px;
+    /* Adjust the modal width */
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+/* Message Cards */
+
+.message-cards {
+    margin-top: 20px;
+    max-height: 300px;
+    /* Set a max height for the message area */
+    overflow-y: auto;
+    /* Make the message list scrollable */
+}
+
+.message-card {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.message-card.expanded {
+    white-space: normal;
+    /* Expand text when card is expanded */
+}
+
+.red-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.see-all-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.see-all-btn:hover {
+    background-color: #444;
+}
