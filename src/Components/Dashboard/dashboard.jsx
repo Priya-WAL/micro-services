@@ -4,6 +4,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import socket from "../../socket";
 import "./dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [messages, setMessages] = useState([]);
@@ -12,6 +13,8 @@ const Dashboard = () => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
   const mounted = useRef(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const navigate = useNavigate()
 
   const fetchNotifications = async (replaceMessages = false) => {
     const token = localStorage.getItem("authToken");
@@ -69,8 +72,21 @@ const Dashboard = () => {
   }, []);
 
   const toggleModal = () => {
+    setIsProfileModalOpen(false)
     setIsModalOpen((prevOpen) => !prevOpen);
   };
+
+  const toggleProfileModal = () => {
+    setIsModalOpen(false)
+    setIsProfileModalOpen((prevOpen) => !prevOpen)
+    
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    navigate('/')
+  }
 
   const markMessageAsRead = (index, id) => {
     const updatedMessages = messages.map((msg, i) =>
@@ -111,7 +127,7 @@ const Dashboard = () => {
               <span className="notification-count">{unreadCount}</span>
             )}
           </div>
-          <FaUserCircle className="profile-icon" />
+          <FaUserCircle className="profile-icon" onClick={toggleProfileModal}/>
         </div>
       </nav>
 
@@ -156,6 +172,20 @@ const Dashboard = () => {
             </div>
             <button className="see-all-btn" onClick={handleViewAll}>
               View All
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isProfileModalOpen && (
+        <div className="profileModal">
+          <div className="modal-content">
+          <div className="profile-modal-header">
+              <h2>{userName}</h2>
+              <h6>{email}</h6>
+            </div>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
             </button>
           </div>
         </div>
