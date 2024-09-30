@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../LoginForm/LoginForm";
-import { FaUser, FaLock, FaPhoneAlt } from "react-icons/fa";
+import { FaUser, FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -92,6 +92,18 @@ const RegisterForm = () => {
 
     fetchCountryCodes();
   }, []); */
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Toggle password visibility for "Password" field
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
+  // Toggle password visibility for "Confirm Password" field
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prevState) => !prevState);
+  };
 
   return (
     <div className="Container-register">
@@ -128,19 +140,29 @@ const RegisterForm = () => {
               </div>
             </div>
             <div className="input-box">
-              <Field type="password" placeholder="Password" name="password" />
-              <FaLock className="icon" />
+              <Field
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                name="password"
+              />
+
+              <div className="icon" onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
               <div className="error">
                 <ErrorMessage name="password" />
               </div>
             </div>
             <div className="input-box">
               <Field
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm Password"
                 name="confirmPassword"
               />
-              <FaLock className="icon" />
+
+              <div className="icon" onClick={toggleConfirmPasswordVisibility}>
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
               <div className="error">
                 <ErrorMessage name="confirmPassword" />
               </div>
@@ -150,7 +172,6 @@ const RegisterForm = () => {
             </div>
             <div className="register-link">
               <p>
-                {" "}
                 Already have an account? <Link to="/"> Login</Link>
               </p>
             </div>

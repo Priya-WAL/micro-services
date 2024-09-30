@@ -1,0 +1,88 @@
+/* Private chat modal styling */
+
+.private-chat-modal {
+    width: 400px;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    max-height: 80vh;
+    /* Same height as the chat modal */
+    overflow-y: auto;
+    z-index: 1;
+    /* Lower than chat modal */
+}
+
+.private-chat-header {
+    padding: 15px;
+    background-color: #8961b1;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.private-chat-header h2 {
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.chat-history {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #e5ddd5;
+}
+
+.chat-message {
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 15px;
+    max-width: 70%;
+}
+
+.chat-message.sent {
+    background-color: #b69dce;
+    align-self: flex-end;
+}
+
+.chat-message.received {
+    background-color: white;
+    align-self: flex-start;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background-color: white;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.chat-input button {
+    background-color: #be98e5;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.no-messages {
+    text-align: center;
+}

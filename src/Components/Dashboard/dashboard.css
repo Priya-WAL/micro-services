@@ -41,7 +41,7 @@
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    background-color: #957DAD;
+    background-color: #957dad;
     color: white;
 }
 
@@ -89,7 +89,7 @@
 
 .dashboard-heading {
     font-size: 32px;
-    color: #957DAD;
+    color: #957dad;
 }
 
 
@@ -134,14 +134,14 @@
     align-items: center;
 }
 
-.modal-header h2{
+.modal-header h2 {
     color: #8961b1;
 }
 
 .profile-modal-header {
     display: flex;
     flex-direction: column;
-    justify-content:flex-start;
+    justify-content: flex-start;
     margin: 5px;
     padding: 5px;
 }
@@ -193,7 +193,7 @@
 }
 
 .see-all-btn {
-    background-color: #957DAD;
+    background-color: #957dad;
     color: white;
     border: none;
     padding: 10px;
@@ -203,7 +203,7 @@
 }
 
 .logout-btn {
-    background-color: #957DAD;
+    background-color: #957dad;
     color: white;
     border: none;
     padding: 10px;
@@ -211,10 +211,34 @@
     margin: 3px;
     cursor: pointer;
 }
+
 .see-all-btn:hover {
     background-color: #8961b1;
 }
 
 .logout-btn:hover {
     background-color: #8961b1;
+}
+
+.chat-icon {
+    position: fixed;
+    bottom: 120px;
+    right: 120px;
+    background-color: #957dad;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chat-icon-image {
+    font-size: 30px;
+}
+
+.chat-icon-text {
+    font-size: 12px;
+    margin-top: 5px;
 }

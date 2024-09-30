@@ -1,0 +1,84 @@
+/* Container for holding both the chat modal and private chat modal */
+
+.chat-container {
+    position: fixed;
+    bottom: 60px;
+    right: 30px;
+    display: flex;
+    gap: 20px;
+    /* Gap between chat and private chat modals */
+    z-index: 9999;
+}
+
+
+/* Chat modal styling */
+
+.chat-modal {
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 2;
+    height: 80vh;
+}
+
+.chat-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 80vh;
+    height: 80vh;
+    /* Same height as the private chat */
+    overflow-y: auto;
+}
+
+.chat-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #8961b1;
+}
+
+.chat-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: black;
+    font-size: 24px;
+}
+
+.connected-users-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.user-card:hover {
+    background-color: #f9f9f9;
+}
+
+.initials-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #be98e5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.user-name {
+    font-size: 16px;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./LoginForm.css";
-import { FaLock } from "react-icons/fa";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -30,20 +30,21 @@ const validate = (values) => {
 
 const LoginForm = () => {
   const [socketId, setSocketId] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (socket.connected) {
-      console.log("Socket connected?", socket.id)
+      console.log("Socket connected?", socket.id);
       setSocketId(socket.id);
-    //   console.log('SocketId', socketId)
+      //   console.log('SocketId', socketId)
     }
     // Listen for the connect event to get the socket.id
     socket.on("connect", () => {
       setSocketId(socket.id); // Save the socket.id when connection is successful
       console.log("Connected with socket ID:", socket.id);
     });
-    
+
     // Clean up when the component unmounts
     return () => {
       socket.off("connect"); // Clean up the 'disconnect' listener
@@ -63,22 +64,24 @@ const LoginForm = () => {
 
       const res = await axios.post(
         "http://localhost:3000/user/login",
-        loginData, {
+        loginData,
+        {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      const token = res.headers['authorization'];
-      console.log('Authtoken', token)
+      const token = res.headers["authorization"];
+      console.log("Authtoken", token);
       let userDetails = {
         userName: res.data.data.username,
-        email: res.data.data.email
-      }
+        email: res.data.data.email,
+        userId: res.data.data._id,
+      };
 
-      console.log('token', userDetails)
+      console.log("token", userDetails);
       localStorage.setItem("user", JSON.stringify(userDetails));
-      localStorage.setItem("authToken", token)
+      localStorage.setItem("authToken", token);
       toast.success("Login successful!");
 
       // Redirect to dashboard after successful login
@@ -101,6 +104,9 @@ const LoginForm = () => {
       .required("Email is Required!"),
     password: Yup.string().required("Password is Required!"),
   });
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState); // Toggle password visibility state
+  };
 
   return (
     <div className="Container-login">
@@ -120,8 +126,19 @@ const LoginForm = () => {
               </div>
             </div>
             <div className="input-box">
-              <Field type="password" placeholder="Password" name="password" />
-              <FaLock className="icon" />
+              <Field
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                name="password"
+              />
+              <div onClick={togglePasswordVisibility}>
+                {showPassword ? (
+                  <FaLockOpen className="icon" /> // Show open lock if password is visible
+                ) : (
+                  <FaLock className="icon" /> // Show closed lock if password is hidden
+                )}
+              </div>
+
               <div className="error">
                 <ErrorMessage name="password" />
               </div>

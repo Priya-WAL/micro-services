@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaComments } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import socket from "../../socket";
 import "./dashboard.css";
 import { useNavigate } from "react-router-dom";
+import ChatModal from "../ChatBot/chatbotmodal";
+import { BsChatDots } from "react-icons/bs";
 
 const Dashboard = () => {
   const [messages, setMessages] = useState([]);
@@ -14,11 +16,14 @@ const Dashboard = () => {
   const [isFetching, setIsFetching] = useState(false);
   const mounted = useRef(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const toggleChatModal = () => {
+    setIsChatOpen((prevState) => !prevState);
+  };
+  const token = localStorage.getItem("authToken");
 
   const fetchNotifications = async (replaceMessages = false) => {
-    const token = localStorage.getItem("authToken");
-
     if (isFetching) return;
     setIsFetching(true);
 
@@ -50,13 +55,15 @@ const Dashboard = () => {
       setIsFetching(false);
     }
   };
-
+  console.log("dashhhh", socket);
   useEffect(() => {
     if (!mounted.current) {
       fetchNotifications(true);
       mounted.current = true;
     }
-
+    console.log(typeof token);
+    // socket.emit("Previous-History", { token });
+    console.log("dash board scoket", socket);
     socket.on("service", (message) => {
       console.log("Service message received:", message);
       const newMessage = { id: null, text: message, isRead: false };
@@ -66,27 +73,30 @@ const Dashboard = () => {
       setUnreadCount((prevCount) => prevCount + 1);
     });
 
+    socket.on("private-message", (message) => {
+      console.log("private-message recevied:", message);
+    });
+
     return () => {
       socket.off("service");
     };
   }, []);
 
   const toggleModal = () => {
-    setIsProfileModalOpen(false)
+    setIsProfileModalOpen(false);
     setIsModalOpen((prevOpen) => !prevOpen);
   };
 
   const toggleProfileModal = () => {
-    setIsModalOpen(false)
-    setIsProfileModalOpen((prevOpen) => !prevOpen)
-    
-  }
+    setIsModalOpen(false);
+    setIsProfileModalOpen((prevOpen) => !prevOpen);
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
-    navigate('/')
-  }
+    localStorage.removeItem("user");
+    localStorage.removeItem("authToken");
+    navigate("/");
+  };
 
   const markMessageAsRead = (index, id) => {
     const updatedMessages = messages.map((msg, i) =>
@@ -113,8 +123,8 @@ const Dashboard = () => {
     fetchNotifications();
   };
 
-  let userDetails = localStorage.getItem('user')
-  let { userName, email } = JSON.parse(userDetails)
+  let userDetails = localStorage.getItem("user");
+  let { userName, email } = JSON.parse(userDetails);
 
   return (
     <div className="dashboard-home">
@@ -127,12 +137,18 @@ const Dashboard = () => {
               <span className="notification-count">{unreadCount}</span>
             )}
           </div>
-          <FaUserCircle className="profile-icon" onClick={toggleProfileModal}/>
+          <FaUserCircle className="profile-icon" onClick={toggleProfileModal} />
         </div>
       </nav>
 
       <div className="dashboard-content">
-        <h1 className="dashboard-heading">Hey {userName}, Welcome to the Notification Service App</h1>
+        <h1 className="dashboard-heading">
+          Hey {userName}, Welcome to the Notification Service App
+        </h1>
+      </div>
+      <div className="chat-icon" onClick={toggleChatModal}>
+        <BsChatDots className="chat-icon-image" />
+        <p className="chat-icon-text">Chat Bot</p>
       </div>
 
       {/* Modal for Notifications */}
@@ -170,9 +186,6 @@ const Dashboard = () => {
                 <p>No new notifications.</p>
               )}
             </div>
-            <button className="see-all-btn" onClick={handleViewAll}>
-              View All
-            </button>
           </div>
         </div>
       )}
@@ -180,7 +193,7 @@ const Dashboard = () => {
       {isProfileModalOpen && (
         <div className="profileModal">
           <div className="modal-content">
-          <div className="profile-modal-header">
+            <div className="profile-modal-header">
               <h2>{userName}</h2>
               <h6>{email}</h6>
             </div>
@@ -190,6 +203,8 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+      {/* Modal for Chat Users */}
+      {isChatOpen && <ChatModal toggleChatModal={toggleChatModal} />}
     </div>
   );
 };
