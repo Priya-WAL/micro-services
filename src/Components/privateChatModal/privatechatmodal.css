@@ -8,23 +8,27 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     max-height: 80vh;
-    /* Same height as the chat modal */
     overflow-y: auto;
     z-index: 1;
-    /* Lower than chat modal */
 }
+
+
+/* Chat header styling */
 
 .private-chat-header {
     padding: 15px;
-    background-color: #8961b1;
+    background-color: #957dad;
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .private-chat-header h2 {
     margin: 0;
+    font-size: 20px;
 }
 
 .close-btn {
@@ -35,29 +39,56 @@
     cursor: pointer;
 }
 
+
+/* Chat history */
+
 .chat-history {
     flex-grow: 1;
     padding: 10px;
-    overflow-y: auto;
     background-color: #e5ddd5;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
+
+
+/* Chat messages */
 
 .chat-message {
-    padding: 8px 12px;
+    padding: 10px 15px;
     margin: 5px 0;
-    border-radius: 15px;
+    border-radius: 18px;
     max-width: 70%;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.5;
 }
+
+
+/* Sent messages styling - Aligned to the right */
 
 .chat-message.sent {
-    background-color: #b69dce;
+    background-color: #a983ce;
+    color: #ffffff;
     align-self: flex-end;
+    border-bottom-right-radius: 0;
+    /* Bubble tail effect */
+    text-align: right;
 }
 
+
+/* Received messages styling - Aligned to the left */
+
 .chat-message.received {
-    background-color: white;
+    background-color: #ffffff;
     align-self: flex-start;
+    border-bottom-left-radius: 0;
+    /* Bubble tail effect */
+    text-align: left;
 }
+
+
+/* Chat input styling */
 
 .chat-input {
     display: flex;
@@ -69,20 +100,57 @@
 .chat-input input {
     flex-grow: 1;
     padding: 10px;
-    border: none;
-    border-radius: 20px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
     margin-right: 10px;
+    outline: none;
+    font-size: 14px;
 }
 
 .chat-input button {
-    background-color: #be98e5;
+    background-color: #a983ce;
     border: none;
     color: white;
     padding: 10px 20px;
-    border-radius: 20px;
+    border-radius: 50px;
     cursor: pointer;
+    font-size: 14px;
 }
+
+.chat-input button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+/* No messages display */
 
 .no-messages {
     text-align: center;
+    color: #757575;
+    font-size: 14px;
+    padding: 10px;
+}
+
+
+/* Chat bubbles tail effect */
+
+.chat-message.sent:after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: 0;
+    border-width: 0 0 8px 8px;
+    border-style: solid;
+    border-color: transparent #dcf8c6 transparent transparent;
+}
+
+.chat-message.received:after {
+    content: "";
+    position: fixed;
+    left: -8px;
+    top: 0;
+    border-width: 8px 8px 0 0;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
 }

@@ -6,6 +6,7 @@ const PrivateChatModal = ({ togglePrivateChat, recipient }) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [message, setMessage] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  console.log("recipientId", recipient);
 
   // Get the current user details from localStorage
   const userDetails = localStorage.getItem("user");
@@ -17,7 +18,6 @@ const PrivateChatModal = ({ togglePrivateChat, recipient }) => {
       socket.emit("user-id-for-private-chat", {
         recipientId: recipient.userId,
       });
-      console.log("recipientId", recipient.userId);
 
       // Listen to the event for receiving private chat history
       socket.on("user-to-user-private-chat-history", (history) => {
@@ -31,6 +31,22 @@ const PrivateChatModal = ({ togglePrivateChat, recipient }) => {
       };
     }
   }, [recipient.userId]); // Add recipient.userId as a dependency
+  console.log("use", recipient.userId);
+  useEffect(() => {
+    const handleNewMessage = (newMessage) => {
+      console.log("before ");
+      console.log(newMessage.senderId, recipient.userId);
+      if (newMessage.senderId === recipient.userId) {
+        console.log("after ");
+        setChatHistory((prevHistory) => [...prevHistory, newMessage]);
+      }
+    };
+    socket.on("private-message", handleNewMessage);
+
+    return () => {
+      socket.off("private-message", handleNewMessage);
+    };
+  }, [recipient.userId]);
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -42,6 +58,7 @@ const PrivateChatModal = ({ togglePrivateChat, recipient }) => {
     if (message.trim()) {
       socket.emit("PrivateMessage", {
         recipientId: recipient.userId,
+        socketId: recipient.socketId,
         message: message.trim(),
       });
       console.log("emii");

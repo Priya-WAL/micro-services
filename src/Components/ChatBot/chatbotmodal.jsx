@@ -46,7 +46,7 @@ const ChatModal = ({ toggleChatModal }) => {
         <div className="chat-modal-content">
           {/* Modal Header */}
           <div className="chat-modal-header">
-            <h2>Connected Users</h2>
+            <h2>Users</h2>
             <button className="chat-modal-close" onClick={toggleChatModal}>
               &times;
             </button>
