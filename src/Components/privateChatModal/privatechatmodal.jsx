@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./privatechatmodal.css";
 import socket from "../../socket"; // Reuse the global socket instance
 
@@ -6,7 +6,7 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [message, setMessage] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  console.log("recipientId", recipient);
+  const chatHistoryRef = useRef(null); // Create a ref for the chat history container
 
   // Get the current user details from localStorage
   const userDetails = localStorage.getItem("user");
@@ -21,7 +21,6 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
 
       // Listen to the event for receiving private chat history
       socket.on("user-to-user-private-chat-history", (history) => {
-        console.log("history", history);
         setChatHistory(history); // Update chat history for the current recipient
       });
 
@@ -30,15 +29,12 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
         socket.off("user-to-user-private-chat-history");
       };
     }
-  }, [recipient.userId]); // Add recipient.userId as a dependency
-  console.log("use", recipient.userId);
+  }, [recipient.userId]);
+
   useEffect(() => {
     const handleNewMessage = (newMessage) => {
-      console.log("before ");
-      console.log(newMessage.senderId, recipient.userId);
       if (newMessage.senderId === recipient.userId) {
         onUserClick(newMessage.senderId);
-        console.log("after ");
         setChatHistory((prevHistory) => [...prevHistory, newMessage]);
       }
     };
@@ -48,6 +44,13 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
       socket.off("private-message", handleNewMessage);
     };
   }, [recipient.userId]);
+
+  // Scroll to the bottom of the chat after messages are updated
+  useLayoutEffect(() => {
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight; // Scroll to the bottom
+    }
+  }, [chatHistory]); // Depend on `chatHistory`
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -62,7 +65,6 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
         socketId: recipient.socketId,
         message: message.trim(),
       });
-      console.log("emii");
       setMessage("");
       setIsButtonDisabled(true);
     }
@@ -78,7 +80,7 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
       </div>
 
       {/* Chat history display with a scrollable area */}
-      <div className="chat-history">
+      <div className="chat-history" ref={chatHistoryRef}>
         {chatHistory.length > 0 ? (
           chatHistory.map((message) => (
             <div
