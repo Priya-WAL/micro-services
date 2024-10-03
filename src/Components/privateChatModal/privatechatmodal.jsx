@@ -1,30 +1,28 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import "./privatechatmodal.css";
-import socket from "../../socket"; // Reuse the global socket instance
+import socket from "../../socket";
+import EmojiPicker, { Categories } from "emoji-picker-react";
 
 const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [message, setMessage] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const chatHistoryRef = useRef(null); // Create a ref for the chat history container
+  const chatHistoryRef = useRef(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  // Get the current user details from localStorage
   const userDetails = localStorage.getItem("user");
   const { userId } = JSON.parse(userDetails);
 
   useEffect(() => {
-    // Emit the event to request private chat history with the selected user
     if (recipient?.userId) {
       socket.emit("user-id-for-private-chat", {
         recipientId: recipient.userId,
       });
 
-      // Listen to the event for receiving private chat history
       socket.on("user-to-user-private-chat-history", (history) => {
-        setChatHistory(history); // Update chat history for the current recipient
+        setChatHistory(history);
       });
 
-      // Clean up event listeners when the component unmounts or recipient changes
       return () => {
         socket.off("user-to-user-private-chat-history");
       };
@@ -45,17 +43,26 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
     };
   }, [recipient.userId]);
 
-  // Scroll to the bottom of the chat after messages are updated
   useLayoutEffect(() => {
     if (chatHistoryRef.current) {
-      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight; // Scroll to the bottom
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
     }
-  }, [chatHistory]); // Depend on `chatHistory`
+  }, [chatHistory]);
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     setMessage(inputValue);
     setIsButtonDisabled(inputValue.trim().length === 0);
+  };
+
+  const handleEmojiPickerToggle = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const handleEmojiClick = (emojiObject) => {
+    setMessage((prevMessage) => prevMessage + emojiObject.emoji);
+    setIsButtonDisabled(false);
+    setShowEmojiPicker(false);
   };
 
   const handleSendMessage = () => {
@@ -79,7 +86,6 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
         </button>
       </div>
 
-      {/* Chat history display with a scrollable area */}
       <div className="chat-history" ref={chatHistoryRef}>
         {chatHistory.length > 0 ? (
           chatHistory.map((message) => (
@@ -99,7 +105,6 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
         )}
       </div>
 
-      {/* Input field to send a new message */}
       <div className="chat-input">
         <input
           type="text"
@@ -107,7 +112,38 @@ const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
           value={message}
           onChange={handleInputChange}
         />
-        <button onClick={handleSendMessage} disabled={isButtonDisabled}>
+
+        <button onClick={handleEmojiPickerToggle} className="emoji-btn">
+          😀
+        </button>
+
+        {showEmojiPicker && (
+          <div className="emoji-picker-container">
+            <EmojiPicker
+              onEmojiClick={handleEmojiClick}
+              disableSearchBar={true}
+              groupVisibility={{
+                flags: false,
+                recently_used: false,
+                animals_nature: false,
+                food_drink: false,
+                travel_places: false,
+                objects: false,
+                symbols: false,
+                activities: false,
+              }}
+              groupNames={{
+                smileys_people: "Smileys & People",
+              }}
+            />
+          </div>
+        )}
+
+        <button
+          className="send_button"
+          onClick={handleSendMessage}
+          disabled={isButtonDisabled}
+        >
           Send
         </button>
       </div>

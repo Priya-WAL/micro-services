@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../LoginForm/LoginForm";
 import { FaUser, FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -18,7 +18,7 @@ const initialValues = {
 
 const register = async (data, navigate) => {
   const { confirmPassword, ...dataWithoutPassword } = data;
-  dataWithoutPassword.phoneNumber = "+91" + dataWithoutPassword.phoneNumber; // Adding +91 as default country code
+  dataWithoutPassword.phoneNumber = "+91" + dataWithoutPassword.phoneNumber;
   await axios({
     method: "POST",
     url: "http://localhost:3000/user/register",
@@ -95,12 +95,10 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Toggle password visibility for "Password" field
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
-  // Toggle password visibility for "Confirm Password" field
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prevState) => !prevState);
   };

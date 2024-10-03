@@ -1,17 +1,11 @@
-/* Container for holding both the chat modal and private chat modal */
-
 .chat-container {
     position: fixed;
     bottom: 60px;
     right: 30px;
     display: flex;
     gap: 20px;
-    /* Gap between chat and private chat modals */
     z-index: 9999;
 }
-
-
-/* Chat modal styling */
 
 .chat-modal {
     width: 400px;
@@ -29,7 +23,6 @@
     border-radius: 10px;
     max-height: 80vh;
     height: 80vh;
-    /* Same height as the private chat */
     overflow-y: auto;
 }
 
@@ -83,12 +76,6 @@
     font-size: 16px;
 }
 
-
-/* Existing styles remain unchanged */
-
-
-/* Unread message badge for Chatbot icon */
-
 .chat-notification-count {
     position: absolute;
     top: -10px;
@@ -101,15 +88,9 @@
     display: none;
 }
 
-
-/* Show the chat notification badge */
-
 .chat-notification-count.show {
     display: inline-block;
 }
-
-
-/* Unread message count next to each user in the Chat Modal */
 
 .user-unread-count {
     background-color: red;

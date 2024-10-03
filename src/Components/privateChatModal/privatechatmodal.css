@@ -1,5 +1,3 @@
-/* Private chat modal styling */
-
 .private-chat-modal {
     width: 400px;
     background-color: #f0f0f0;
@@ -11,9 +9,6 @@
     overflow-y: auto;
     z-index: 1;
 }
-
-
-/* Chat header styling */
 
 .private-chat-header {
     padding: 15px;
@@ -39,9 +34,6 @@
     cursor: pointer;
 }
 
-
-/* Chat history */
-
 .chat-history {
     flex-grow: 1;
     padding: 10px;
@@ -50,9 +42,6 @@
     display: flex;
     flex-direction: column;
 }
-
-
-/* Chat messages */
 
 .chat-message {
     padding: 10px 15px;
@@ -64,31 +53,20 @@
     line-height: 1.5;
 }
 
-
-/* Sent messages styling - Aligned to the right */
-
 .chat-message.sent {
     background-color: #a983ce;
     color: #ffffff;
     align-self: flex-end;
     border-bottom-right-radius: 0;
-    /* Bubble tail effect */
     text-align: right;
 }
-
-
-/* Received messages styling - Aligned to the left */
 
 .chat-message.received {
     background-color: #ffffff;
     align-self: flex-start;
     border-bottom-left-radius: 0;
-    /* Bubble tail effect */
     text-align: left;
 }
-
-
-/* Chat input styling */
 
 .chat-input {
     display: flex;
@@ -107,23 +85,10 @@
     font-size: 14px;
 }
 
-.chat-input button {
-    background-color: #a983ce;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
 .chat-input button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
-
-
-/* No messages display */
 
 .no-messages {
     text-align: center;
@@ -132,12 +97,8 @@
     padding: 10px;
 }
 
-
-/* Chat bubbles tail effect */
-
 .chat-message.sent:after {
-    content: "";
-    position: absolute;
+    position: relative;
     right: -8px;
     top: 0;
     border-width: 0 0 8px 8px;
@@ -153,4 +114,59 @@
     border-width: 8px 8px 0 0;
     border-style: solid;
     border-color: #ffffff transparent transparent transparent;
+}
+
+.emoji-picker-container {
+    position: absolute;
+    bottom: 60px;
+    right: 450px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.emoji-picker-container .emoji-picker {
+    max-height: 300px;
+    width: 300px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.emoji-picker-container .emoji-picker {
+    max-height: 300px;
+    width: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: none;
+}
+
+.emoji-picker-container .emoji-picker input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.emoji-btn {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.send_button {
+    background-color: #a983ce;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.emoji-picker-container .emoji-picker {
+    background-color: #ffffff;
 }

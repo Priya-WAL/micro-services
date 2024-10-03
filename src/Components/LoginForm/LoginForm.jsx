@@ -37,17 +37,14 @@ const LoginForm = () => {
     if (socket.connected) {
       console.log("Socket connected?", socket.id);
       setSocketId(socket.id);
-      //   console.log('SocketId', socketId)
     }
-    // Listen for the connect event to get the socket.id
     socket.on("connect", () => {
-      setSocketId(socket.id); // Save the socket.id when connection is successful
+      setSocketId(socket.id);
       console.log("Connected with socket ID:", socket.id);
     });
 
-    // Clean up when the component unmounts
     return () => {
-      socket.off("connect"); // Clean up the 'disconnect' listener
+      socket.off("connect");
     };
   }, []);
 
@@ -59,7 +56,6 @@ const LoginForm = () => {
         return;
       }
 
-      // Add the socketId to the login data
       const loginData = { ...data, socketId };
 
       const res = await axios.post(
@@ -84,7 +80,6 @@ const LoginForm = () => {
       localStorage.setItem("authToken", token);
       toast.success("Login successful!");
 
-      // Redirect to dashboard after successful login
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
@@ -105,7 +100,7 @@ const LoginForm = () => {
     password: Yup.string().required("Password is Required!"),
   });
   const togglePasswordVisibility = () => {
-    setShowPassword((prevState) => !prevState); // Toggle password visibility state
+    setShowPassword((prevState) => !prevState);
   };
 
   return (
@@ -133,9 +128,9 @@ const LoginForm = () => {
               />
               <div onClick={togglePasswordVisibility}>
                 {showPassword ? (
-                  <FaLockOpen className="icon" /> // Show open lock if password is visible
+                  <FaLockOpen className="icon" />
                 ) : (
-                  <FaLock className="icon" /> // Show closed lock if password is hidden
+                  <FaLock className="icon" />
                 )}
               </div>
 

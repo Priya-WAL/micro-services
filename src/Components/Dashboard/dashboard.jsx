@@ -18,8 +18,7 @@ const Dashboard = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [unreadMessages, setUnreadMessages] = useState({}); // To track unread messages for each user
-  console.log("unreadMessages", unreadMessages);
+  const [unreadMessages, setUnreadMessages] = useState({});
 
   const toggleChatModal = () => {
     setIsChatOpen((prevState) => !prevState);
@@ -72,12 +71,10 @@ const Dashboard = () => {
     });
 
     socket.on("private-message", (message) => {
-      console.log("rivate-message", message);
-      // Assuming 'message' includes senderId
       const { senderId } = message;
       setUnreadMessages((prevCounts) => ({
         ...prevCounts,
-        [senderId]: (prevCounts[senderId] || 0) + 1, // Increment unread message count for the user
+        [senderId]: (prevCounts[senderId] || 0) + 1,
       }));
     });
 
@@ -124,7 +121,6 @@ const Dashboard = () => {
   };
 
   const handleUserClick = (userId) => {
-    // Reset unread count when user clicks on chat
     setUnreadMessages((prevCounts) => ({
       ...prevCounts,
       [userId]: 0,
@@ -165,7 +161,6 @@ const Dashboard = () => {
         <p className="chat-icon-text">Chat Bot</p>
       </div>
 
-      {/* Modal for Notifications */}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -216,12 +211,11 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-      {/* Modal for Chat Users */}
       {isChatOpen && (
         <ChatModal
-          toggleChatModal={toggleChatModal} // Pass connected users to the chat modal
-          onUserClick={handleUserClick} // Handle user click
-          unreadMessageCounts={unreadMessages} // Pass unread message counts
+          toggleChatModal={toggleChatModal}
+          onUserClick={handleUserClick}
+          unreadMessageCounts={unreadMessages}
         />
       )}
     </div>

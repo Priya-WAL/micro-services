@@ -6,12 +6,10 @@ import PrivateChatModal from "../privateChatModal/privatechatmodal";
 const ChatModal = ({ toggleChatModal, unreadMessageCounts, onUserClick }) => {
   const [connectedUsers, setConnectedUsers] = useState([]);
   console.log("cone", connectedUsers);
-  const [currentChatUser, setCurrentChatUser] = useState(null); // State to manage the current chat user
+  const [currentChatUser, setCurrentChatUser] = useState(null);
 
-  // Fetch authorization token from local storage
   const token = localStorage.getItem("authToken");
 
-  // Simplified function to get only the first letter of the first word
   const getUserInitials = (name) => {
     if (!name) return "";
 
@@ -32,8 +30,8 @@ const ChatModal = ({ toggleChatModal, unreadMessageCounts, onUserClick }) => {
   }, []);
 
   const handleUserClick = (user) => {
-    onUserClick(user.userId); // Reset unread count for this user
-    setCurrentChatUser(user); // Set the clicked user as the current chat user
+    onUserClick(user.userId);
+    setCurrentChatUser(user);
   };
 
   return (
@@ -47,7 +45,6 @@ const ChatModal = ({ toggleChatModal, unreadMessageCounts, onUserClick }) => {
       )}
       <div className="chat-modal">
         <div className="chat-modal-content">
-          {/* Modal Header */}
           <div className="chat-modal-header">
             <h2>Users</h2>
             <button className="chat-modal-close" onClick={toggleChatModal}>
@@ -55,7 +52,6 @@ const ChatModal = ({ toggleChatModal, unreadMessageCounts, onUserClick }) => {
             </button>
           </div>
 
-          {/* List of Connected Users */}
           <div className="connected-users-list">
             {connectedUsers?.length > 0 ? (
               connectedUsers?.map((user, index) => (
@@ -64,7 +60,6 @@ const ChatModal = ({ toggleChatModal, unreadMessageCounts, onUserClick }) => {
                   key={index}
                   onClick={() => handleUserClick(user)}
                 >
-                  {/* Display Initials */}
                   <div className="initials-avatar">
                     {getUserInitials(user.username)}
                   </div>
