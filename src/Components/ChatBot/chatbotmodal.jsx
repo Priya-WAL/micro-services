@@ -3,8 +3,9 @@ import "./chatbotmodal.css";
 import socket from "../../socket";
 import PrivateChatModal from "../privateChatModal/privatechatmodal";
 
-const ChatModal = ({ toggleChatModal }) => {
+const ChatModal = ({ toggleChatModal, unreadMessageCounts, onUserClick }) => {
   const [connectedUsers, setConnectedUsers] = useState([]);
+  console.log("cone", connectedUsers);
   const [currentChatUser, setCurrentChatUser] = useState(null); // State to manage the current chat user
 
   // Fetch authorization token from local storage
@@ -31,6 +32,7 @@ const ChatModal = ({ toggleChatModal }) => {
   }, []);
 
   const handleUserClick = (user) => {
+    onUserClick(user.userId); // Reset unread count for this user
     setCurrentChatUser(user); // Set the clicked user as the current chat user
   };
 
@@ -40,6 +42,7 @@ const ChatModal = ({ toggleChatModal }) => {
         <PrivateChatModal
           togglePrivateChat={() => setCurrentChatUser(null)}
           recipient={currentChatUser}
+          onUserClick={onUserClick}
         />
       )}
       <div className="chat-modal">
@@ -54,8 +57,8 @@ const ChatModal = ({ toggleChatModal }) => {
 
           {/* List of Connected Users */}
           <div className="connected-users-list">
-            {connectedUsers.length > 0 ? (
-              connectedUsers.map((user, index) => (
+            {connectedUsers?.length > 0 ? (
+              connectedUsers?.map((user, index) => (
                 <div
                   className="user-card"
                   key={index}
@@ -66,6 +69,11 @@ const ChatModal = ({ toggleChatModal }) => {
                     {getUserInitials(user.username)}
                   </div>
                   <span className="user-name">{user.username}</span>
+                  {unreadMessageCounts[user.userId] > 0 && (
+                    <span className="unread-count">
+                      {unreadMessageCounts[user.userId]}
+                    </span>
+                  )}
                 </div>
               ))
             ) : (

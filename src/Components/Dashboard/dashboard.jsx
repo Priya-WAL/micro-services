@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUserCircle, FaComments } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import socket from "../../socket";
@@ -18,6 +18,9 @@ const Dashboard = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState({}); // To track unread messages for each user
+  console.log("unreadMessages", unreadMessages);
+
   const toggleChatModal = () => {
     setIsChatOpen((prevState) => !prevState);
   };
@@ -55,17 +58,12 @@ const Dashboard = () => {
       setIsFetching(false);
     }
   };
-  console.log("dashhhh", socket);
   useEffect(() => {
     if (!mounted.current) {
       fetchNotifications(true);
       mounted.current = true;
     }
-    console.log(typeof token);
-    // socket.emit("Previous-History", { token });
-    console.log("dash board scoket", socket);
     socket.on("service", (message) => {
-      console.log("Service message received:", message);
       const newMessage = { id: null, text: message, isRead: false };
 
       setMessages((prevMessages) => [newMessage, ...prevMessages]);
@@ -74,11 +72,18 @@ const Dashboard = () => {
     });
 
     socket.on("private-message", (message) => {
-      console.log("private-message recevied:", message);
+      console.log("rivate-message", message);
+      // Assuming 'message' includes senderId
+      const { senderId } = message;
+      setUnreadMessages((prevCounts) => ({
+        ...prevCounts,
+        [senderId]: (prevCounts[senderId] || 0) + 1, // Increment unread message count for the user
+      }));
     });
 
     return () => {
       socket.off("service");
+      socket.off("private-message");
     };
   }, []);
 
@@ -110,7 +115,6 @@ const Dashboard = () => {
     setUnreadCount(updatedUnreadCount);
 
     if (id) {
-      console.log("Marking as read:", id);
       socket.emit("readnotification", { notificationId: id });
     }
   };
@@ -119,8 +123,12 @@ const Dashboard = () => {
     setExpandedCard(expandedCard === index ? null : index);
   };
 
-  const handleViewAll = () => {
-    fetchNotifications();
+  const handleUserClick = (userId) => {
+    // Reset unread count when user clicks on chat
+    setUnreadMessages((prevCounts) => ({
+      ...prevCounts,
+      [userId]: 0,
+    }));
   };
 
   let userDetails = localStorage.getItem("user");
@@ -148,6 +156,12 @@ const Dashboard = () => {
       </div>
       <div className="chat-icon" onClick={toggleChatModal}>
         <BsChatDots className="chat-icon-image" />
+        {Object.keys(unreadMessages).length > 0 &&
+          Object.values(unreadMessages).reduce((a, b) => a + b, 0) >= 1 && (
+            <span className="notification-count">
+              {Object.values(unreadMessages).reduce((a, b) => a + b, 0)}
+            </span>
+          )}
         <p className="chat-icon-text">Chat Bot</p>
       </div>
 
@@ -162,7 +176,6 @@ const Dashboard = () => {
               </button>
             </div>
 
-            {/* Scrollable list of messages */}
             <div className="message-cards">
               {messages.length > 0 ? (
                 messages
@@ -204,7 +217,13 @@ const Dashboard = () => {
         </div>
       )}
       {/* Modal for Chat Users */}
-      {isChatOpen && <ChatModal toggleChatModal={toggleChatModal} />}
+      {isChatOpen && (
+        <ChatModal
+          toggleChatModal={toggleChatModal} // Pass connected users to the chat modal
+          onUserClick={handleUserClick} // Handle user click
+          unreadMessageCounts={unreadMessages} // Pass unread message counts
+        />
+      )}
     </div>
   );
 };

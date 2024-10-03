@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./privatechatmodal.css";
 import socket from "../../socket"; // Reuse the global socket instance
 
-const PrivateChatModal = ({ togglePrivateChat, recipient }) => {
+const PrivateChatModal = ({ togglePrivateChat, recipient, onUserClick }) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [message, setMessage] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -37,6 +37,7 @@ const PrivateChatModal = ({ togglePrivateChat, recipient }) => {
       console.log("before ");
       console.log(newMessage.senderId, recipient.userId);
       if (newMessage.senderId === recipient.userId) {
+        onUserClick(newMessage.senderId);
         console.log("after ");
         setChatHistory((prevHistory) => [...prevHistory, newMessage]);
       }

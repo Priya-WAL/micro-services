@@ -82,3 +82,53 @@
 .user-name {
     font-size: 16px;
 }
+
+
+/* Existing styles remain unchanged */
+
+
+/* Unread message badge for Chatbot icon */
+
+.chat-notification-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 6px;
+    font-size: 12px;
+    display: none;
+}
+
+
+/* Show the chat notification badge */
+
+.chat-notification-count.show {
+    display: inline-block;
+}
+
+
+/* Unread message count next to each user in the Chat Modal */
+
+.user-unread-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 6px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.unread-count {
+    background-color: #be98e5;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+}
