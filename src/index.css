@@ -14,7 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  background: #957DAD;
+  /* background: #957DAD; */
   opacity: 0.9;
 }
 

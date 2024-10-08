@@ -1,5 +1,3 @@
-/* Dashboard Styles */
-
 .dashboard-home {
     margin: 0;
     padding: 0;
@@ -20,9 +18,6 @@
     color: black;
 }
 
-
-/* Dashboard Content Styles */
-
 .dashboard-content {
     padding: 20px;
 }
@@ -30,7 +25,7 @@
 .dashboard-heading {
     font-size: 36px;
     font-weight: bold;
-    color: white;
+    color: black;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -41,7 +36,7 @@
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    background-color: #333;
+    background-color: #957dad;
     color: white;
 }
 
@@ -80,32 +75,29 @@
     margin-left: 20px;
 }
 
-
-/* Dashboard Content */
-
 .dashboard-content {
     padding: 20px;
 }
 
 .dashboard-heading {
     font-size: 32px;
+    color: #957dad;
 }
-
-
-/* Modal Styles */
-
-
-/* Modal Styles */
 
 .modal {
     position: fixed;
-    top: 10px;
-    /* Keep the modal towards the top */
+    top: 50px;
     right: 10px;
-    /* Shift the modal to the right corner */
     width: 350px;
-    /* Adjust the modal width */
-    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(20, 19, 19, 0.2);
+}
+
+.profileModal {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    width: 250px;
+    box-shadow: 0 0 10px rgba(20, 19, 19, 0.2);
 }
 
 .modal-content {
@@ -123,6 +115,22 @@
     align-items: center;
 }
 
+.modal-header h2 {
+    color: #8961b1;
+}
+
+.profile-modal-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 5px;
+    padding: 5px;
+}
+
+.profile-modal-header h2 {
+    padding-bottom: 10px;
+}
+
 .modal-close {
     background: none;
     border: none;
@@ -130,15 +138,10 @@
     cursor: pointer;
 }
 
-
-/* Message Cards */
-
 .message-cards {
     margin-top: 20px;
     max-height: 300px;
-    /* Set a max height for the message area */
     overflow-y: auto;
-    /* Make the message list scrollable */
 }
 
 .message-card {
@@ -152,7 +155,6 @@
 
 .message-card.expanded {
     white-space: normal;
-    /* Expand text when card is expanded */
 }
 
 .red-dot {
@@ -166,7 +168,7 @@
 }
 
 .see-all-btn {
-    background-color: #333;
+    background-color: #957dad;
     color: white;
     border: none;
     padding: 10px;
@@ -175,6 +177,43 @@
     cursor: pointer;
 }
 
+.logout-btn {
+    background-color: #957dad;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    margin: 3px;
+    cursor: pointer;
+}
+
 .see-all-btn:hover {
-    background-color: #444;
+    background-color: #8961b1;
+}
+
+.logout-btn:hover {
+    background-color: #8961b1;
+}
+
+.chat-icon {
+    position: fixed;
+    bottom: 120px;
+    right: 120px;
+    background-color: #957dad;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chat-icon-image {
+    font-size: 30px;
+}
+
+.chat-icon-text {
+    font-size: 12px;
+    margin-top: 5px;
 }
